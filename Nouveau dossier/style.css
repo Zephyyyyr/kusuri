@@ -1,0 +1,701 @@
+/* Custom styles for Shimei Missions */
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #2c3e50;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f1c40f;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+    margin: 0;
+    background: #f0e4d6 url('suna_background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    min-height: 10vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#app {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: rgba(170, 102, 51, 0.9); /* Darker sand/orange */
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.suna-logo {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60px; /* Adjust size as needed */
+}
+
+nav {
+    background: rgba(204, 153, 102, 0.9); /* Lighter sand/orange */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 20px;
+}
+
+nav a {
+    color: #4a2d0f; /* Dark brown */
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, text-decoration 0.3s ease, background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+nav a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(170, 102, 51, 0.3);
+}
+
+nav a.active {
+    background-color: #aa6633;
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    background: rgba(170, 102, 51, 0.6); /* Changed: Darker sand/orange with opacity for content area */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #4a2d0f; /* Dark brown heading */
+    border-bottom: 2px solid #4a2d0f;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+h3 {
+     color: #4a2d0f; /* Darker sand */
+     margin-top: 15px;
+     margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #4a2d0f;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensure padding doesn't add to width */
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.participant-details {
+    border: 1px dashed #aa6633;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: rgba(204, 153, 102, 0.3); /* Slightly light sand background */
+}
+
+.participant-details h4 {
+    margin-top: 0;
+    color: #4a2d0f;
+    margin-bottom: 10px;
+}
+
+.member-form,
+.report-form,
+#login form { /* Added styling for login form */
+    background-color: rgba(204, 153, 102, 0.3); /* Slightly darker sand background */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px; /* Space below the form */
+    border: 1px solid rgba(170, 102, 51, 0.5); /* Slight border */
+}
+
+.member-form h3,
+.report-form h3,
+#login h2 { /* Style for form headings */
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #4a2d0f; /* Match section heading color */
+}
+
+.member-form form,
+.report-form form { /* Keep existing form flex layout */
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping items */
+    gap: 15px; /* Add space between flex items (form groups) */
+    align-items: flex-start; /* Align items to the top */
+}
+
+#login form { /* Simple block layout for login form */
+    display: block;
+    gap: 0; /* No gap needed */
+}
+
+#login .form-group { /* Add margin below login form groups */
+    margin-bottom: 15px;
+}
+
+.member-form .form-group {
+    flex: 1 1 100%; /* Default: take full width */
+    box-sizing: border-box; /* Include padding/border in element's total width */
+}
+
+.member-form .form-group:first-child {
+     flex-basis: 100%;
+}
+
+.member-form .form-group:nth-child(2),
+.member-form .form-group:nth-child(3),
+.member-form .form-group:nth-child(4)
+{
+    flex: 1 1 calc(33.33% - 10px); /* Take roughly one-third width, accounting for gap */
+    min-width: 150px; /* Ensure fields don't get too narrow */
+}
+
+.member-buttons,
+.report-form-actions,
+#login button[type="submit"] { /* Style login submit button */
+    flex-basis: 100%; /* Take full width below the form groups */
+    text-align: right; /* Align buttons to the right */
+    margin-top: 10px; /* Add some space above the buttons */
+}
+
+button[type="submit"],
+.submit-btn,
+.edit-btn,
+.delete-btn,
+.validate-btn,
+.reject-btn,
+.cancel-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    font-family: inherit;
+    margin-right: 0;
+}
+
+.member-buttons button {
+    margin-left: 5px;
+}
+
+.member-buttons button:first-child {
+    margin-left: 0;
+}
+
+button[type="submit"],
+.submit-btn {
+    background-color: #aa6633;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+}
+
+button[type="submit"]:hover,
+.submit-btn:hover {
+    background-color: #884422;
+}
+
+.edit-btn {
+    background-color: #5cb85c; /* Green */
+    color: white;
+}
+.edit-btn:hover {
+    background-color: #4cae4c;
+}
+
+.delete-btn {
+    background-color: #d9534f; /* Red */
+    color: white;
+}
+.delete-btn:hover {
+    background-color: #c9302c;
+}
+
+.validate-btn {
+     background-color: #5cb85c; /* Green */
+     color: white;
+     margin-right: 10px; /* Space between validate and reject */
+}
+.validate-btn:hover {
+     background-color: #4cae4c;
+}
+
+.reject-btn {
+     background-color: #f0ad4e; /* Orange */
+     color: white;
+}
+.reject-btn:hover {
+     background-color: #ec971f;
+}
+
+.cancel-btn {
+     background-color: #777; /* Grey */
+     color: white;
+}
+.cancel-btn:hover {
+     background-color: #555;
+}
+
+.submission-message {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9f7ef;
+    border: 1px solid #d0e9c6;
+    border-radius: 4px;
+    color: #3c763d;
+}
+
+.submission-message h3 {
+    color: #3c763d;
+    margin-top: 0;
+}
+
+.shimei-note {
+    font-style: italic;
+    color: #4a2d0f;
+    margin-bottom: 20px;
+}
+
+.mission-card {
+    border: 1px solid #aa6633;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8); /* Add a light background for readability on darker main area */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.mission-card h3 {
+    color: #884422;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mission-card h3 .requester-name-display {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #884422;
+    margin-left: 10px;
+}
+
+.mission-actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.action-taken-note {
+    font-style: italic;
+    color: #555;
+    text-align: right;
+    margin-top: 15px;
+}
+
+.status-pending {
+    color: #f0ad4e; /* Orange */
+    font-weight: bold;
+}
+
+.status-validated {
+    color: #5cb85c; /* Green */
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #d9534f; /* Red */
+    font-weight: bold;
+}
+
+.shimei-action {
+     margin-top: 15px;
+     margin-bottom: 15px;
+}
+
+.shimei-action label {
+     font-style: italic;
+     color: #666;
+     margin-bottom: 5px;
+}
+
+.report-list {
+    margin-top: 30px;
+}
+
+.report-list h3 {
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 5px;
+    color: #4a2d0f;
+}
+
+.report-card {
+    border: 1px solid #aa6633;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8); /* Light background for readability */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.report-card h4 {
+     color: #884422;
+     margin-top: 0;
+     margin-bottom: 5px;
+}
+
+.report-meta {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.report-content-preview p {
+    margin-top: 0;
+    white-space: pre-wrap; /* Preserve line breaks in textarea content */
+}
+
+.report-section {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-top: 1px dashed #ccc;
+    padding-top: 15px;
+}
+
+.report-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #4a2d0f;
+}
+
+.report-actions {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.member-list {
+    margin-top: 30px;
+}
+
+.member-list h3 {
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 5px;
+    color: #4a2d0f;
+}
+
+.member-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.member-item {
+    background-color: rgba(230, 180, 140, 0.7); /* Changed: Light sand color with opacity */
+    border: 1px solid rgba(170, 102, 51, 0.5); /* Keep a subtle border */
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.member-item span {
+    flex-grow: 1; /* Allow name/rank to take up available space */
+}
+
+.member-item .animateur-tag {
+    font-size: 0.8em;
+    background-color: #aa6633;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+.member-actions {
+    display: flex;
+    gap: 5px;
+}
+
+footer {
+    background: rgba(170, 102, 51, 0.9); /* Same as header */
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .suna-logo {
+        position: static;
+        transform: none;
+        height: 40px;
+        margin-bottom: 10px;
+    }
+    header {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    main {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .member-form form {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .member-form .form-group,
+    .member-form .form-group:first-child,
+    .member-form .form-group:nth-child(2),
+    .member-form .form-group:nth-child(3),
+    .member-form .form-group:nth-child(4)
+    {
+        flex-basis: 100%; /* Full width on small screens */
+        min-width: auto;
+    }
+
+    .member-buttons {
+        text-align: center; /* Center buttons on small screens */
+    }
+     .mission-card h3 {
+        flex-direction: column; /* Stack title and requester name */
+        align-items: flex-start;
+     }
+     .mission-card h3 .requester-name-display {
+         margin-left: 0;
+         margin-top: 5px; /* Space between title and name */
+     }
+    .member-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .member-actions {
+        width: 100%; /* Make action buttons take full width below member details */
+        justify-content: center; /* Center the action buttons */
+    }
+    .report-form form {
+         flex-direction: column;
+         gap: 10px;
+    }
+    .report-form-actions {
+         text-align: center;
+    }
+}
+
+/* Custom styles for Shimei Missions */
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #2c3e50;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f1c40f;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: darken(var(--primary-color), 10%);
+    border-color: darken(var(--primary-color), 10%);
+}
+
+.table {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--light-color);
+    border-bottom: 2px solid #dee2e6;
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.alert {
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .alert {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal styles */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    background-color: var(--light-color);
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .table-responsive {
+        margin: 0 -10px;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: darken(var(--primary-color), 10%);
+}

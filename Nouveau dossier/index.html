@@ -1,0 +1,299 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimei de Sunagakure</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&display=swap" rel="stylesheet">
+    <script type="importmap">
+        {
+            "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <img src="/channels4_profile.jpg" alt="FC Dragon Logo" class="suna-logo">
+            <h1>Shimei de Sunagakure</h1>
+            <p>Service des missions et de l'administration du Village Caché du Sable</p>
+        </header>
+
+        <nav v-if="user.role !== 'guest'">
+            <ul>
+                <li><a href="#missions" @click.prevent="changeSection('missions')" :class="{ active: currentSection === 'missions' }">Demande de Missions</a></li>
+                <li v-if="user.role !== 'guest'"><a href="#received-missions" @click.prevent="changeSection('received-missions')" :class="{ active: currentSection === 'received-missions' }">Missions Reçues (Shimei)</a></li>
+                <li v-if="user.role === 'admin'"><a href="#shimei-members" @click.prevent="changeSection('shimei-members')" :class="{ active: currentSection === 'shimei-members' }">Membres Shimei (Admin)</a></li>
+                <li v-if="user.role !== 'guest'"><a href="#reports" @click.prevent="changeSection('reports')" :class="{ active: currentSection === 'reports' }">Rapports de Missions</a></li>
+                <li><a href="#about" @click.prevent="changeSection('about')" :class="{ active: currentSection === 'about' }">À Propos de la Shimei</a></li>
+                <li><a href="#contact" @click.prevent="changeSection('contact')" :class="{ active: currentSection === 'contact' }">Contact</a></li>
+                <li><a href="#" @click.prevent="logout">Déconnexion ({{ user.name }})</a></li>
+            </ul>
+        </nav>
+         <nav v-else>
+             <ul>
+                <li><a href="#login" @click.prevent="changeSection('login')" :class="{ active: currentSection === 'login' }">Connexion</a></li>
+                <li><a href="#missions" @click.prevent="changeSection('missions')" :class="{ active: currentSection === 'missions' }">Demande de Missions</a></li>
+                <li><a href="#about" @click.prevent="changeSection('about')" :class="{ active: currentSection === 'about' }">À Propos de la Shimei</a></li>
+                <li><a href="#contact" @click.prevent="changeSection('contact')" :class="{ active: currentSection === 'contact' }">Contact</a></li>
+            </ul>
+         </nav>
+
+
+        <main>
+            <section id="login" v-show="currentSection === 'login'">
+                 <h2>Connexion Shimei / Admin</h2>
+                 <p>Connectez-vous pour accéder aux sections internes de la Shimei ou de l'administration.</p>
+                 <form @submit.prevent="login">
+                     <div class="form-group">
+                         <label for="username">Nom d'utilisateur :</label>
+                         <input type="text" id="username" v-model="loginForm.username" required>
+                     </div>
+                     <div class="form-group">
+                         <label for="password">Mot de passe :</label>
+                         <input type="password" id="password" v-model="loginForm.password" required>
+                     </div>
+                     <button type="submit" class="submit-btn">Se connecter</button>
+                     <p v-if="loginError" class="login-error">{{ loginError }}</p>
+                 </form>
+            </section>
+
+            <section id="missions" v-show="currentSection === 'missions'">
+                <h2>Demande de Missions</h2>
+                <p>Remplissez le formulaire ci-dessous pour soumettre une demande de mission à la Shimei.</p>
+
+                <form @submit.prevent="submitMissionRequest">
+                    <div class="form-group">
+                        <label for="requester-name">Votre Nom (Demandeur) :</label>
+                        <input type="text" id="requester-name" v-model="missionRequest.requesterName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mission-rank">Rang de la Mission Demandée :</label>
+                        <select id="mission-rank" v-model="missionRequest.rank" required>
+                            <option value="">-- Sélectionnez un Rang --</option>
+                            <option value="D">Rang D</option>
+                            <option value="C">Rang C</option>
+                            <option value="B">Rang B</option>
+                            <option value="A">Rang A</option>
+                            <option value="S">Rang S</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-participants">Nombre de Participants Prévus :</label>
+                        <input type="number" id="num-participants" v-model.number="missionRequest.numParticipants" min="1" @input="updateParticipants" required>
+                    </div>
+
+                    <div v-if="missionRequest.participants.length > 0">
+                        <h3>Détails des Participants ({{ missionRequest.participants.length }} ninja)</h3>
+                        <div v-for="(participant, index) in missionRequest.participants" :key="index" class="participant-details">
+                            <h4>Participant {{ index + 1 }}</h4>
+                            <div class="form-group">
+                                <label :for="'participant-name-' + index">Nom :</label>
+                                <input type="text" :id="'participant-name-' + index" v-model="participant.name" required>
+                            </div>
+                            <div class="form-group">
+                                <label :for="'participant-rank-' + index">Rang Ninja :</label>
+                                <input type="text" :id="'participant-rank-' + index" v-model="participant.rank" placeholder="Ex: Genin, Chūnin, Jōnin" required>
+                            </div>
+                             <div class="form-group">
+                                <label :for="'participant-clan-' + index">Clan / Sub-jutsu / Spécialité :</label>
+                                <input type="text" :id="'participant-clan-' + index" v-model="participant.details" placeholder="Ex: Clan Kazekage, Maîtrise du Sable, Genjutsu">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mission-details">Description Détaillée de la Mission :</label>
+                        <textarea id="mission-details" v-model="missionRequest.details" rows="5" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Soumettre la Demande</button>
+                </form>
+
+                <div v-if="submissionMessage" class="submission-message">
+                    <h3>Statut de la Demande</h3>
+                    <p>{{ submissionMessage }}</p>
+                </div>
+
+            </section>
+
+            <section id="received-missions" v-show="currentSection === 'received-missions' && user.role !== 'guest'">
+                 <h2>Missions Reçues (Vue Shimei)</h2>
+                 <p class="shimei-note">Note: Ceci est une simulation de l'interface Shimei. Les données ne sont stockées que temporairement dans cette session de navigation.</p>
+                <p class="shimei-note">Cette section liste les demandes de missions soumises via le formulaire "Demande de Missions".</p>
+
+                 <div v-if="receivedMissions.length === 0">
+                    <p>Aucune demande de mission n'a encore été soumise via le formulaire.</p>
+                 </div>
+                 <div v-else>
+                    <div v-for="(mission, index) in receivedMissions" :key="index" class="mission-card">
+                        <h3>Demande #{{ index + 1 }} - Rang {{ mission.rank }} <span class="requester-name-display">Demandeur: {{ mission.requesterName }}</span></h3>
+                        <p><strong>Description :</strong> {{ mission.details }}</p>
+                        <p><strong>Participants Prévus :</strong> {{ mission.numParticipants }} ninja</p>
+                        <h4>Détails des Participants :</h4>
+                        <ul>
+                            <li v-for="(participant, pIndex) in mission.participants" :key="pIndex">
+                                {{ participant.name }} ({{ participant.rank }}) - {{ participant.details || 'Aucune spécialité indiquée' }}
+                            </li>
+                        </ul>
+                        <div class="shimei-action">
+                            <label :for="'shimei-notes-' + index">Notes Shimei (Prix, Date, Heure, Assignation) :</label>
+                            <textarea :id="'shimei-notes-' + index" v-model="mission.shimeiNotes" rows="3" placeholder="Saisissez ici les détails d'assignation"></textarea>
+                        </div>
+                         <p><strong>Statut Shimei :</strong> <span :class="{'status-pending': mission.status === 'En attente', 'status-validated': mission.status === 'Validée', 'status-rejected': mission.status === 'Refusée'}">{{ mission.status }}</span></p>
+
+                        <div class="mission-actions" v-if="mission.status === 'En attente'">
+                            <button class="validate-btn" @click="validateMission(index)">Valider</button>
+                            <button class="reject-btn" @click="rejectMission(index)">Refuser</button>
+                        </div>
+                         <div class="mission-actions" v-else>
+                             <p class="action-taken-note">Action déjà prise sur cette mission.</p>
+                         </div>
+
+                    </div>
+                 </div>
+            </section>
+
+            <section id="shimei-members" v-show="currentSection === 'shimei-members' && user.role === 'admin'">
+                 <h2>Membres de la Shimei (Vue Admin)</h2>
+                 <p class="shimei-note">Gérez la liste des membres de la Shimei.</p>
+
+                 <div class="member-form">
+                     <h3>{{ editingIndex === null ? 'Ajouter un Nouveau Membre' : 'Modifier le Membre' }}</h3>
+                     <form @submit.prevent="editingIndex === null ? addMember() : updateMember()">
+                         <div class="form-group">
+                             <label for="member-name">Nom du Membre :</label>
+                             <input type="text" id="member-name" v-model="currentMember.name" required>
+                         </div>
+                         <div class="form-group">
+                             <label for="member-rank">Rang Shimei :</label>
+                             <select id="member-rank" v-model="currentMember.rank" required>
+                                 <option value="">-- Sélectionnez un Rang --</option>
+                                 <option v-for="rank in shimeiRanks" :key="rank" :value="rank">{{ rank }}</option>
+                             </select>
+                         </div>
+                          <div class="form-group">
+                            <label for="member-ninja-rank">Rang Ninja :</label>
+                            <select id="member-ninja-rank" v-model="currentMember.ninjaRank" required>
+                                <option value="">-- Sélectionnez un Rang Ninja --</option>
+                                <option v-for="rank in ninjaRanksList" :key="rank" :value="rank">{{ rank }}</option>
+                            </select>
+                         </div>
+                         <div class="form-group">
+                            <label for="is-animateur">Animateur :</label>
+                            <select id="is-animateur" v-model="currentMemberAnimateurStatus" required>
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+                         </div>
+                         <div class="member-buttons">
+                             <button type="submit" class="submit-btn">{{ editingIndex === null ? 'Ajouter Membre' : 'Mettre à Jour' }}</button>
+                             <button type="button" v-if="editingIndex !== null" @click="cancelEdit()" class="cancel-btn">Annuler</button>
+                         </div>
+                     </form>
+                 </div>
+
+                 <div class="member-list">
+                    <h3>Liste des Membres Actuels</h3>
+                    <div v-if="shimeiMembers.length === 0">
+                       <p>Aucun membre de la Shimei n'est enregistré pour l'instant.</p>
+                    </div>
+                    <div v-else>
+                       <ul>
+                           <li v-for="(member, index) in shimeiMembers" :key="index" class="member-item">
+                               <span><strong>{{ member.name }}</strong> (Rang Ninja: {{ member.ninjaRank }}) - {{ member.rank }} <span v-if="member.isAnimateur" class="animateur-tag">(Animateur)</span></span>
+                               <div class="member-actions">
+                                   <button @click="editMember(index)" class="edit-btn">Modifier</button>
+                                   <button @click="deleteMember(index)" class="delete-btn">Supprimer</button>
+                               </div>
+                           </li>
+                       </ul>
+                    </div>
+                 </div>
+            </section>
+
+            <section id="reports" v-show="currentSection === 'reports' && user.role !== 'guest'">
+                <h2>Rapports de Missions (Vue Shimei)</h2>
+                 <p class="shimei-note">Rédigez ou consultez les rapports de mission créés par les membres de la Shimei.</p>
+
+                 <div class="report-form">
+                     <h3>{{ editingReportIndex === null ? 'Créer un Nouveau Rapport' : 'Modifier le Rapport' }}</h3>
+                     <form @submit.prevent="editingReportIndex === null ? addReport() : updateReport()">
+                         <div class="form-group">
+                            <label for="report-form-title">Titre du Rapport :</label>
+                            <input type="text" id="report-form-title" v-model="reportFormTitle" required>
+                         </div>
+                         <div class="form-group">
+                            <label for="report-form-rank">Rang de Mission Associé :</label>
+                            <select id="report-form-rank" v-model="reportFormRank" required>
+                                <option value="">-- Sélectionnez un Rang --</option>
+                                <option value="D">Rang D</option>
+                                <option value="C">Rang C</option>
+                                <option value="B">Rang B</option>
+                                <option value="A">Rang A</option>
+                                <option value="S">Rang S</option>
+                            </select>
+                         </div>
+                          <div class="form-group">
+                             <label for="report-form-writer">Rédigé par (Membre Shimei) :</label>
+                             <input type="text" id="report-form-writer" v-model="reportFormWriter" required>
+                         </div>
+                         <div class="form-group">
+                            <label for="report-form-content">Contenu du Rapport :</label>
+                            <textarea id="report-form-content" v-model="reportFormContent" rows="8" placeholder="Détails de la mission, déroulement, participants, résultats, etc." required></textarea>
+                         </div>
+                          <div class="report-form-actions">
+                             <button type="submit" class="submit-btn">{{ editingReportIndex === null ? 'Enregistrer le Rapport' : 'Mettre à Jour le Rapport' }}</button>
+                             <button type="button" v-if="editingReportIndex !== null" @click="cancelReportEdit()" class="cancel-btn">Annuler</button>
+                          </div>
+                     </form>
+                 </div>
+
+                 <div class="report-list">
+                    <h3>Rapports Existants</h3>
+                    <div v-if="shimeiReports.length === 0">
+                       <p>Aucun rapport n'a encore été créé.</p>
+                    </div>
+                    <div v-else>
+                       <div v-for="(report, index) in shimeiReports" :key="index" class="report-card">
+                           <h4>{{ report.title }} (Rang {{ report.rank }})</h4>
+                           <p class="report-meta">Rédigé par {{ report.writer }} le {{ report.date }}</p>
+                           <div class="report-content-preview">
+                               <p>{{ report.content }}</p>
+                           </div>
+                           <div class="report-actions">
+                                <button @click="editReport(index)" class="edit-btn">Modifier</button>
+                                <button @click="deleteReport(index)" class="delete-btn">Supprimer</button>
+                           </div>
+                       </div>
+                    </div>
+                 </div>
+            </section>
+
+            <section id="about" v-show="currentSection === 'about'">
+                <h2>À Propos de la Shimei</h2>
+                <p>La Shimei est l'organisation administrative et de gestion des missions de Sunagakure. Nous assurons le lien entre les requêtes des clients et les capacités de nos braves shinobi, garantissant la sécurité et la prospérité du Village Caché du Sable.</p>
+                <p>Notre rôle inclut l'évaluation des demandes, l'assignation des équipes ninja appropriées, et la gestion logistique des missions, du simple rang D au périlleux rang S. Faites confiance à la Shimei pour le bon déroulement de vos opérations.</p>
+            </section>
+
+            <section id="contact" v-show="currentSection === 'contact'">
+                <h2>Contactez la Shimei</h2>
+                <p>Pour toute question ou demande spécifique ne rentrant pas dans le cadre du formulaire de mission, vous pouvez nous contacter via les canaux appropriés du village ou vous présenter directement aux bureaux de la Shimei.</p>
+                <p>Nos heures d'ouverture sont...</p>
+                <p>Adresse : ... (Emplacement au sein du village)</p>
+                <p>Contact pour les ninja enregistrés : Tableau des missions, Bureau du Kazekage.</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; {{ currentYear }} Sunagakure Shimei - Par les dunes et sous le soleil</p>
+        </footer>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
